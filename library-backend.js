@@ -97,6 +97,7 @@ type Author {
     name: String!
     born : Int
     id : ID!
+    bookCount : Int!
 }
 
 type Query {
@@ -117,6 +118,11 @@ type Mutation {
 `
 
 const resolvers = {
+    Author:{
+        bookCount: (root) => books.filter(book => 
+            book.author === root.name).length
+    },
+
     Query: {
         allBooks: (root,args) => {
             let selection = [].concat(books)
