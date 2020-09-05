@@ -114,6 +114,10 @@ type Mutation {
         author : String!
         genres : [String]!
     ) : Book
+    editAuthor(
+        name: String!
+        setBornTo : Int!
+    ): Author
 }
 `
 
@@ -145,6 +149,12 @@ const resolvers = {
                 console.log('in if', authors)
             }
             return book
+        },
+        editAuthor : (root, args) => {
+            const author = authors.find(author => author.name===args.name)
+            if (!author) return null
+            author.born = args.setBornTo
+            return author
         }
     }
 }
