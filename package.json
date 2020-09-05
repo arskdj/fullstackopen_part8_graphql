@@ -1,0 +1,24 @@
+{
+  "name": "fullstackopen_part8_graphql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+      "start" : "nodemon library-backend.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arskdj/fullstackopen_part8_graphql.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arskdj/fullstackopen_part8_graphql/issues"
+  },
+  "homepage": "https://github.com/arskdj/fullstackopen_part8_graphql#readme",
+  "dependencies": {
+    "apollo-server": "^2.17.0",
+    "graphql": "^15.3.0"
+  }
+}
