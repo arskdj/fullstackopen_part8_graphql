@@ -19,6 +19,7 @@
   "homepage": "https://github.com/arskdj/fullstackopen_part8_graphql#readme",
   "dependencies": {
     "apollo-server": "^2.17.0",
+    "dotenv": "^8.2.0",
     "graphql": "^15.3.0",
     "mongoose": "^5.10.3",
     "mongoose-unique-validator": "^2.0.3"
