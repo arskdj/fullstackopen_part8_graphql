@@ -6,7 +6,9 @@ import { SET_AUTHOR_BORN } from '../mutations'
 const SetBirthYear = () => {
     const [name, setName] = useState('')
     const [born, setBorn] = useState('')
-    const [setBornTo] = useMutation(SET_AUTHOR_BORN)
+    const [setBornTo] = useMutation(SET_AUTHOR_BORN, {
+        refetchQueries : [ { query: ALL_AUTHORS } ]
+    })
 
 
     const submit = (event) => {
