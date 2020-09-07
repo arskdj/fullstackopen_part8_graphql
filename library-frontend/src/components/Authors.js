@@ -1,46 +1,84 @@
-import React from 'react'
-import { useQuery } from '@apollo/client'
-import { ALL_AUTHORS } from '../queries.js'
+import React, {useState} from 'react'
+import { useQuery, useMutation } from '@apollo/client'
+import { ALL_AUTHORS  } from '../queries.js'
+import { SET_AUTHOR_BORN } from '../mutations'
+
+const SetBirthYear = () => {
+    const [name, setName] = useState('')
+    const [born, setBorn] = useState('')
+    const [setBornTo] = useMutation(SET_AUTHOR_BORN)
+
+
+    const submit = (event) => {
+        event.preventDefault()
+        
+        setBornTo({variables : {
+            name,
+            setBornTo:parseInt(born)
+        }})
+
+    }
+
+    return (
+        <div>
+            <h1> Set Birth Year </h1> 
+            <form onSubmit={submit}>
+                <div>
+                    name 
+                    <input value={name}  onChange={ ({target}) => setName(target.value)}  />
+                </div>
+                <div>
+                    born
+                    <input value={born}  onChange={ ({target}) => setBorn(target.value)} />
+                </div>
+                <button type='submit'> submit </button>
+            </form>
+        </div>
+    )
+}
 
 const Authors = (props) => {
-  const result = useQuery(ALL_AUTHORS)
+    const result = useQuery(ALL_AUTHORS)
 
-  if (!props.show) {
-    return null
-  }
-     
-  if (result.loading)  {
-    return <div>loading...</div>
-  }
+    if (!props.show) {
+        return null
+    }
 
-  const authors = result.data.allAuthors
+    if (result.loading)  {
+        return <div>loading...</div>
+    }
 
-  return (
-    <div>
-      <h2>authors</h2>
-      <table>
-        <tbody>
-          <tr>
-            <th></th>
-            <th>
-              born
-            </th>
-            <th>
-              books
-            </th>
-          </tr>
-          {authors.map(a =>
-            <tr key={a.name}>
-              <td>{a.name}</td>
-              <td>{a.born}</td>
-              <td>{a.bookCount}</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+    const authors = result.data.allAuthors
 
-    </div>
-  )
+
+
+    return (
+        <div>
+            <h2>authors</h2>
+            <table>
+                <tbody>
+                    <tr>
+                        <th></th>
+                        <th>
+                            born
+                        </th>
+                        <th>
+                            books
+                        </th>
+                    </tr>
+                    {authors.map(a =>
+                    <tr key={a.name}>
+                        <td>{a.name}</td>
+                        <td>{a.born}</td>
+                        <td>{a.bookCount}</td>
+                    </tr>
+                    )}
+                </tbody>
+            </table>
+
+            <SetBirthYear/>
+        </div>
+    )
 }
 
 export default Authors
