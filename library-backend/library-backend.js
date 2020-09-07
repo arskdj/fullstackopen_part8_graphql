@@ -143,10 +143,9 @@ const resolvers = {
     Mutation : {
         addBook: (root, args) => {
             const book = { ...args, id : uuid() }
-            books = books.concat(book)
+            books.push(book)
             if (!authors.find(author => author.name === args.author)){
                 authors = authors.concat({name:args.author, born: null, id : uuid()})
-                console.log('in if', authors)
             }
             return book
         },
