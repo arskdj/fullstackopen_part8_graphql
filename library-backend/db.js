@@ -69,11 +69,22 @@ const books = [
     },
 ]
 
+const users = [
+    { 
+        username: 'mario',
+        favoriteGenre: 'classic'
+    },
+    { 
+        username: 'luigi',
+        favoriteGenre: 'refactoring'
+    },
+]
 
 require('dotenv').config()
 const mongoose = require('mongoose')
 const Author = require('./models/author')
 const Book = require('./models/book')
+const User = require('./models/user')
 const DB_URI = process.env.TEST_DB_URI
 
 
@@ -108,11 +119,13 @@ const init = async () => {
     try {
         await Author.deleteMany({})
         await Book.deleteMany({})
+        //await User.deleteMany({})
 
         const authorPromises = await authors.map(a => new Author(a).save())
         const bookPromises   = await books.map(b => new Book(b).save())
+        const userPromises = await users.map(u => new User(u).save())
 
-        await Promise.all(authorPromises.concat(bookPromises))
+        await Promise.all([...authorPromises, ...userPromises, ...bookPromises])
 
         console.log('initialized')
     }  catch (error) {
