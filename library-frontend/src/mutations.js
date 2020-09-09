@@ -10,7 +10,9 @@ mutation createBook($title: String!, $published: Int!, $author: String!, $genres
     ) {
         title
         published
-        author
+        author {
+            name
+        }
         genres
     } 
 }
