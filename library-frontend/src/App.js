@@ -4,8 +4,21 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
 import Recommend from './components/Recommend'
-import { useQuery, useApolloClient } from '@apollo/client'
+import { useSubscription, useQuery, useApolloClient, gql } from '@apollo/client'
 import { CURRENT_USER } from './queries'
+
+export const BOOK_ADDED = gql`
+subscription {
+    bookAdded {
+        title
+        author {
+            name
+        }
+        published
+        genres
+    }
+}
+`
 
 const App = () => {
     const [page, setPage] = useState('authors')
@@ -14,6 +27,13 @@ const App = () => {
     const me = useQuery(CURRENT_USER)
 
     const [username, setUsername] = useState('')
+
+    useSubscription(BOOK_ADDED, {
+        onSubscriptionData: ({ subscriptionData }) => {
+            const book = subscriptionData.data.bookAdded
+            window.alert(`book added ${book.title}, ${book.author.name}, ${book.published}`)
+        }
+    })
 
     useEffect( () => {
         me.refetch()
