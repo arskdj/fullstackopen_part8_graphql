@@ -7,14 +7,13 @@ const Login = ({show, setToken, setPage}) => {
     const password = useInput()
 
     const [login, result] = useMutation(LOGIN, {
-        onError: (error) => {
-            setError(error.graphQLErrors[0].message)
-        }
+        onError: (error) => setError(error.graphQLErrors[0].message),
     })
 
     useEffect( () => {
-        if (result.data){
-            const token = result.data.login.value
+        const token = result.data?.login?.value
+
+        if (token){
             setToken(token)
             localStorage.setItem('token',token)
         }
@@ -26,7 +25,7 @@ const Login = ({show, setToken, setPage}) => {
             username: username.value, 
             password: password.value
         }})
-        setPage('add')
+        setPage('recommend')
     }
 
     if (!show) return null
