@@ -5,11 +5,12 @@ import NewBook from './components/NewBook'
 import Login from './components/Login'
 import Recommend from './components/Recommend'
 import { useSubscription, useQuery, useApolloClient, gql } from '@apollo/client'
-import { CURRENT_USER } from './queries'
+import { CURRENT_USER, ALL_BOOKS } from './queries'
 
 export const BOOK_ADDED = gql`
 subscription {
     bookAdded {
+        id
         title
         author {
             name
@@ -20,18 +21,43 @@ subscription {
 }
 `
 
+
 const App = () => {
     const [page, setPage] = useState('authors')
     const [token, setToken] = useState(localStorage.getItem('token'))
-    const client = useApolloClient()
     const me = useQuery(CURRENT_USER)
 
     const [username, setUsername] = useState('')
+
+    const client = useApolloClient()
+    const updateCacheWith = (addedBook) => {
+        const includedIn = (set, object) =>
+            set.map(p => p.id).includes(object.id)
+
+        const update = (variables) => {
+            const dataInStore = client.readQuery({ query: ALL_BOOKS, variables })
+            if (!includedIn(dataInStore.allBooks, addedBook)) {
+                client.writeQuery({
+                    query: ALL_BOOKS,
+                    variables,
+                    data: { allBooks : dataInStore.allBooks.concat(addedBook) }
+                })
+            }
+        }
+
+        update({})
+
+        //recommended
+        addedBook.genres.forEach( genre => 
+            update({genre})
+        )
+    }
 
     useSubscription(BOOK_ADDED, {
         onSubscriptionData: ({ subscriptionData }) => {
             const book = subscriptionData.data.bookAdded
             window.alert(`book added ${book.title}, ${book.author.name}, ${book.published}`)
+            updateCacheWith(book)
         }
     })
 

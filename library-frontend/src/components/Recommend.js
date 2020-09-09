@@ -18,10 +18,6 @@ const Recommend = ({show, token}) => {
         getBooks({ variables : {genre} })
         const bookList = books.data?.allBooks
 
-        console.log('bd',books?.data)
-        console.log('bl',bookList)
-        console.log('gn',genre)
-
         if (bookList && genre) {
             setBookList(bookList)
         }
