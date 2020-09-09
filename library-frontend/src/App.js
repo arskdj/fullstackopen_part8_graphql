@@ -8,14 +8,12 @@ import { useQuery, useApolloClient } from '@apollo/client'
 import { CURRENT_USER } from './queries'
 
 const App = () => {
-    const [page, setPage] = useState('recommend')
+    const [page, setPage] = useState('authors')
     const [token, setToken] = useState(localStorage.getItem('token'))
     const client = useApolloClient()
     const me = useQuery(CURRENT_USER)
 
     const [username, setUsername] = useState('')
-    console.log('me',me)
-    console.log('me.data',me.data)
 
     useEffect( () => {
         me.refetch()

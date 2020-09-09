@@ -6,25 +6,29 @@ import BookList from '../components/BookList'
 const Books = (props) => {
     const result = useQuery(ALL_BOOKS)
     const [bookList, setBookList] = useState([])
+    const [genre, setGenre] = useState('all')
     
 
 
 
 
     const allBooks = result.data ? result.data.allBooks : []
-    let genres = [ ...new Set(allBooks.flatMap(b => b.genres)) ]
+    const genres = [ ...new Set(allBooks.flatMap(b => b.genres)) ]
 
     useEffect(() => {
         setBookList(allBooks)    
     }, [result.data])
 
-    const filter = (genre) => {
-        if (!genre){
+    const filter = () => {
+        if (genre === 'all'){
             setBookList(allBooks)
+        } else {
+            const list = allBooks.filter( b => b.genres.includes(genre))
+            setBookList(list)
         }
-        const list = allBooks.filter( b => b.genres.includes(genre))
-        setBookList(list)
     }
+
+    useEffect( filter, [genre, result.data])
 
     if (!props.show) {
         return null
@@ -37,13 +41,13 @@ const Books = (props) => {
     return (
         <div>
 
-            <h2> Genres </h2>
-            <button onClick={() => setBookList(allBooks)}> all </button>
+            <h2>Books</h2>
+            <button onClick={() => setGenre('all')}> all </button>
             {
-                genres.map( g => <button onClick={() => filter(g)}> {g} </button> )
+                genres.map( g => <button onClick={() => setGenre(g)}> {g} </button> )
             }
 
-            <h2>Books</h2>
+            <h2> Genre: {genre} </h2>
             <BookList bookList={bookList} />
         </div>
     )

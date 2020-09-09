@@ -119,7 +119,7 @@ const init = async () => {
     try {
         await Author.deleteMany({})
         await Book.deleteMany({})
-        //await User.deleteMany({})
+        await User.deleteMany({})
 
         const authorPromises = await authors.map(a => new Author(a).save())
         const bookPromises   = await books.map(b => new Book(b).save())

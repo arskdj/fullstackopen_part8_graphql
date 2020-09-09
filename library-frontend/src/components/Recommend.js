@@ -1,31 +1,36 @@
 import React, {useState, useEffect} from "react"
 import BookList from './BookList'
 import { CURRENT_USER, ALL_BOOKS } from '../queries.js'
-import { useQuery } from '@apollo/client'
+import { useQuery, useLazyQuery } from '@apollo/client'
 
 const Recommend = ({show, token}) => {
     const [bookList, setBookList] = useState([])
-    const allBooks = useQuery(ALL_BOOKS)
+    const [ getBooks, books ]  = useLazyQuery(ALL_BOOKS)
     const user = useQuery(CURRENT_USER)
 
     useEffect(() => {
-       user.refetch() 
+       token && user.refetch() 
     }, [token])
 
     useEffect(() => {
-        const books = allBooks?.data?.allBooks
-        const genre = user?.data?.me?.favoriteGenre
 
-        if (books && genre) {
-            const list = books.filter(b => b.genres.includes(genre))
-            setBookList(list)
+        const genre = user.data?.me?.favoriteGenre
+        getBooks({ variables : {genre} })
+        const bookList = books.data?.allBooks
+
+        console.log('bd',books?.data)
+        console.log('bl',bookList)
+        console.log('gn',genre)
+
+        if (bookList && genre) {
+            setBookList(bookList)
         }
 
-    } , [allBooks, user])
+    }, [user.data, books.data])
 
 
     if (!show) return null
-    if (user.loading || allBooks.loading){
+    if (user.loading || books.loading){
         return (
             <div>
                 loading...
@@ -37,6 +42,8 @@ const Recommend = ({show, token}) => {
     return(
         <div>
             <h1> Recommendations </h1>
+            <p> books in your genre <strong> { user?.data?.me?.favoriteGenre
+ } </strong>  </p>
             <BookList bookList= {bookList}/>
         </div>
     )

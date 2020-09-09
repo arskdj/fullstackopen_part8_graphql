@@ -82,8 +82,9 @@ const resolvers = {
     Query: {
         allBooks: async (root,args) => {
             let query = {}
+            console.log(args)
 
-            if (args.genre)   query = { genres: { $in : [ args.genres ] } }
+            if (args.genre)   query = { genres: { $in : [ args.genre ] } }
             //if (args.author)  query = { ...query, author: args.author }
             return await Book.find(query)
         },
@@ -98,8 +99,8 @@ const resolvers = {
             if (!currentUser){
                 throw new AuthenticationError("not authenticated")
             }
-            let author = await Author.find({name : args.author})
-            if (author.length < 1){
+            let author = await Author.findOne({name : args.author})
+            if (!author){
                 author = new Author({name: args.author, born: null})
                 try{
                     await author.save()
