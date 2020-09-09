@@ -72,10 +72,6 @@ type Subscription {
 
 
 const resolvers = {
-    Book : {
-        author : async (root) => await Author.findById(root.author)
-    },
-
     Author:{
         bookCount: async (root) => {
             const books = await Book.find({author: root.id})
@@ -86,11 +82,11 @@ const resolvers = {
     Query: {
         allBooks: async (root,args) => {
             let query = {}
-            console.log(args)
 
             if (args.genre)   query = { genres: { $in : [ args.genre ] } }
             //if (args.author)  query = { ...query, author: args.author }
-            return await Book.find(query)
+            const book =  await Book.find(query).populate('author')
+            return book
         },
         allAuthors : async () => await Author.find({}),
         bookCount : async () => await Book.find({}).length,
