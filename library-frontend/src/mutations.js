@@ -29,3 +29,14 @@ mutation setAuthorBorn($name : String!, $setBornTo: Int!){
     }
 }
 `
+
+export const LOGIN = gql`
+mutation muLogin($username : String!, $password: String!){
+    login(
+        username: $username,
+        password: $password
+    ){
+        value
+    }
+}
+`

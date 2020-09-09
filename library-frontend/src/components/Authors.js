@@ -27,7 +27,7 @@ const SetBirthYear = ({authors}) => {
             <form onSubmit={submit}>
                 <div>
                     <select value={name}  onChange={ ({target}) => setName(target.value)} >
-                        { authors.map( a => <option value={a.name}> {a.name} </option> ) }
+                        { authors.map( a => <option key={a.id} value={a.name}> {a.name} </option> ) }
                     </select>
                 </div>
                 <div>
